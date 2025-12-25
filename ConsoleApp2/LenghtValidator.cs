@@ -1,21 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
-    public class LengthValidator : Validator
+    public class LengthValidator : Validator<string>
     {
-        public override bool Validate(string data)
+        private readonly int _minLength;
+
+        public LengthValidator(int minLength = 5)
         {
-            if (data.Length < 5)
+            _minLength = minLength;
+        }
+
+        public override bool Handle(string request)
+        {
+            if (request.Length < _minLength)
             {
-                Console.WriteLine("Ошибка: Длина данных должна быть не менее 5 символов.");
+                Console.WriteLine($"Ошибка: Длина данных должна быть не менее {_minLength} символов.");
                 return false;
             }
-            return NextValidator?.Validate(data) ?? true;
+
+            Console.WriteLine($"Длина данных валидна (не менее {_minLength} символов).");
+            return base.Handle(request);
         }
     }
 }
