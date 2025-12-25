@@ -1,21 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
-    public class NumericValidator : Validator
+    public class NumericValidator : Validator<string>
     {
-        public override bool Validate(string data)
+        public override bool Handle(string request)
         {
-            if (!int.TryParse(data, out _))
+            if (!int.TryParse(request, out int number))
             {
                 Console.WriteLine("Ошибка: Данные должны быть числом.");
                 return false;
             }
-            return NextValidator?.Validate(data) ?? true;
+
+            Console.WriteLine($"Данные '{request}' являются корректным числом: {number}");
+            return base.Handle(request);
         }
     }
 }

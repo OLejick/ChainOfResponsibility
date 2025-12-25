@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
-    public class RangeValidator : Validator
+    public class RangeValidator : Validator<string>
     {
         private readonly int _min;
         private readonly int _max;
@@ -17,15 +13,22 @@ namespace ConsoleApp2
             _max = max;
         }
 
-        public override bool Validate(string data)
+        public override bool Handle(string request)
         {
-            int number = int.Parse(data);
-            if (number < _min || number > _max)
+            if (!int.TryParse(request, out int number))
             {
-                Console.WriteLine($"Ошибка: Данные должны быть в диапазоне от до {_max}.");
+                Console.WriteLine("Ошибка: Данные должны быть числом.");
                 return false;
             }
-            return NextValidator?.Validate(data) ?? true;
+
+            if (number < _min || number > _max)
+            {
+                Console.WriteLine($"Ошибка: Данные должны быть в диапазоне от {_min} до {_max}.");
+                return false;
+            }
+
+            Console.WriteLine($"Число {number} находится в допустимом диапазоне ({_min}-{_max}).");
+            return base.Handle(request);
         }
     }
 }
